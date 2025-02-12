@@ -13,7 +13,6 @@ BlinkLed::BlinkLed(uint8_t pin, uint16_t duration, uint16_t pause)
 
 void BlinkLed::begin() {
     pinMode(_pin, OUTPUT);
-    setColor(0);
 }
 
 void BlinkLed::setErrorPattern(uint8_t blinks) {
@@ -40,6 +39,7 @@ void BlinkLed::setErrorPattern(uint8_t blinks, uint32_t color, uint16_t duration
 void BlinkLed::clearPattern() {
     _isBlinking = false;
     _inPause = false;
+    setColor(0);  // Apaga o LED
 }
 
 void BlinkLed::setState(uint32_t color) {
