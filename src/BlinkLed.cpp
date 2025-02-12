@@ -1,22 +1,19 @@
 #include "BlinkLed.h"
 
-BlinkLed::BlinkLed(uint8_t pin, bool isRGB, uint16_t numLeds, uint32_t color,
-    uint16_t duration, uint16_t pause)
-    : _pin(pin), _isRGB(isRGB), _numLeds(numLeds), _defaultBlinkColor(color),
-      _defaultBlinkDuration(duration), _defaultPauseDuration(pause),
-      _isBlinking(false), _currentBlink(0), _lastBlinkTime(0), _ledState(false), _inPause(false) {
+BlinkLed::BlinkLed(ESP32_WS2812_RMT* ws2812Strip, uint16_t numLeds, uint32_t color,
+    uint16_t duration , uint16_t pause) : _ws2812Strip(ws2812Strip), _numLeds(numLeds),
+    _defaultBlinkColor(color), _defaultBlinkDuration(duration), _defaultPauseDuration(pause),
+    _isBlinking(false), _currentBlink(0), _lastBlinkTime(0), _ledState(false),
+    _inPause(false), _isRGB(true) {}
 
-    if (_isRGB) {
-        _strip = new ESP32_WS2812_RMT(_pin, _numLeds, RMT_CHANNEL_7);
-    }
-}
+BlinkLed::BlinkLed(uint8_t pin, uint16_t duration, uint16_t pause)
+    : _pin(pin), _isRGB(true), _numLeds(1), _defaultBlinkColor(0xffffff),
+      _defaultBlinkDuration(duration), _defaultPauseDuration(pause),
+      _isBlinking(false), _currentBlink(0), _lastBlinkTime(0), _ledState(false), _inPause(false) {}
 
 void BlinkLed::begin() {
     pinMode(_pin, OUTPUT);
-
-    if (_isRGB) {
-        _strip->begin();
-    }
+    setColor(0);
 }
 
 void BlinkLed::setErrorPattern(uint8_t blinks) {
@@ -58,10 +55,10 @@ void BlinkLed::update() {
 }
 
 void BlinkLed::setColor(uint32_t color) {
-    if (_isRGB) {
+    if (_ws2812Strip) {
         rgb_t cor = BlinkLed::rgbColor(color);
-        _strip->fillColor(cor.r, cor.g, cor.b); // Vermelho
-        _strip->show();
+        _ws2812Strip->fillColor(cor.r, cor.g, cor.b); // Vermelho
+        _ws2812Strip->show();
     } else {
         digitalWrite(_pin, color ? HIGH : LOW);
     }

@@ -15,8 +15,9 @@ typedef struct {
 
 class BlinkLed {
 public:
-    BlinkLed(uint8_t pin, bool isRGB = false, uint16_t numLeds = 1, uint32_t color = 0xffffff,
+    BlinkLed(ESP32_WS2812_RMT* ws2812Strip = nullptr, uint16_t numLeds = 1, uint32_t color = 0xffffff,
         uint16_t duration = 500, uint16_t pause = 1000);
+    BlinkLed(uint8_t pin, uint16_t duration = 500, uint16_t pause = 1000);
     void begin();
     
     void setErrorPattern(uint8_t blinks, uint32_t color, uint16_t duration = 500, uint16_t pause = 1000);
@@ -50,7 +51,7 @@ private:
     bool _ledState;
     bool _inPause;  // Flag para indicar se está no tempo de pausa
     
-    ESP32_WS2812_RMT* _strip;
+    ESP32_WS2812_RMT* _ws2812Strip;
 };
 
 #endif
