@@ -40,7 +40,6 @@ void BlinkLed::setErrorPattern(uint8_t blinks, uint32_t color, uint16_t duration
 void BlinkLed::clearPattern() {
     _isBlinking = false;
     _inPause = false;
-    setColor(0);  // Apaga o LED
 }
 
 void BlinkLed::setState(uint32_t color) {
